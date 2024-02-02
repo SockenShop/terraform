@@ -14,6 +14,12 @@ agent any
                         input message: 'Do you want to provision in AWS ?', ok: 'Yes'
                     }
             script {
+                sh 'rm -Rf .aws'
+                sh 'mkdir .aws'
+                sh 'aws configure set aws_access_key_id $AWSKEY'
+                sh 'aws configure set aws_secret_access_key $AWSSECRETKEY'
+                sh 'aws configure set region eu-west-3'
+                sh 'aws configure set output text'
                 sh 'terraform apply -auto-approve '
             }
         }
