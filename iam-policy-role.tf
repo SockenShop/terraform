@@ -272,3 +272,32 @@ resource "aws_iam_role_policy_attachment" "lb_att_policy" {
     role = aws_iam_role.lb_role_trust
     policy_arn = aws_iam_policy.lb_ctrl_policy.arn
 }
+
+/* //role for EFS
+resource "aws_iam_role" "efs_csi_role_trust" {
+    name = "TfEKSEFSFCSIRole"
+    assume_role_policy = jsondecode({
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Federated": "${aws_iam_openid_connect_provider.eks_oidc.arn}"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+                "StringEquals": {
+                    "${module.eks.oidc_provider}:aud": "sts.amazonaws.com",
+                    "${module.eks.oidc_provider}:sub": "system:serviceaccount:kube-system:efs-csi-*"
+                }
+            }
+        }
+    ]
+})
+}
+// attach EFS CSI policy to EFS CSI role
+resource "aws_iam_role_policy_attachment" "efs_csi_att_policy" {
+    role = aws_iam_role.efs_csi_role_trust
+    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy"
+}
+*/
