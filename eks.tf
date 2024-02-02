@@ -18,7 +18,7 @@ module "eks" {
   cluster_encryption_config      = {}
 
 # deprecated / obsolete
-/*
+
   cluster_addons = {
     coredns = {
       most_recent = true
@@ -30,7 +30,7 @@ module "eks" {
       most_recent = true
     }
   }
-  */
+ 
 # define managed node group
   eks_managed_node_group_defaults = {
     ami_type = "AL2_x86_64"
