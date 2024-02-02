@@ -5,6 +5,7 @@
 ### automated
 webhook triggers jenkins pipeline (see Jenkinsfile) on code commit/push
 ### manual
+- aws configure
 - clone repo
 - terraform init
 - terraform plan
