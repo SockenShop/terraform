@@ -70,6 +70,11 @@ agent any
             sh 'kubectl apply -f mon-ingress.yaml'
         }
     }
+    stage ('deploy app') {
+        steps {
+            build job: "ms-frontend-ci-cd", wait: true
+        }
+    }
     stage ('destroy everything') {
         environment {
                 AWSKEY = credentials("AWS_KEY")
