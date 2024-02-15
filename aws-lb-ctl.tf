@@ -8,7 +8,7 @@ resource "kubernetes_service_account" "service-account" {
     }
     annotations = {
       "eks.amazonaws.com/role-arn"               = aws_iam_role.lb_role_trust.arn
-      "eks.amazonaws.com/sts-regional-endpoints" = "true"
+      //"eks.amazonaws.com/sts-regional-endpoints" = "true"
     }
   }
 }
