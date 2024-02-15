@@ -60,11 +60,11 @@ agent any
             sh 'aws configure set region $AWSREGION'
             sh 'aws configure set output text'
             sh 'aws eks --region $AWSREGION update-kubeconfig --name $EKSCLUSTERNAME'
-            //sh 'helm uninstall prometheus --namespace monitoring'
+            sh 'helm uninstall prometheus --namespace monitoring'
             sh 'helm repo add prometheus-community https://prometheus-community.github.io/helm-charts'
             sh 'helm repo update'
             sh 'kubectl apply -f mon-namespace.yaml'
-            sh 'helm upgrade --install --timeout=15m prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --set grafana.service.type=NodePort --set promotheus.service.type=NodePort --set prometheusOperator.tls.enabled=false'
+            sh 'helm install --timeout=15m prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --set grafana.service.type=NodePort --set promotheus.service.type=NodePort'
             sh 'kubectl apply -f mon-ingress.yaml'
         }
     }
