@@ -7,15 +7,13 @@ agent any
                 sh 'terraform plan'
             }
         }
-        stage ('create infrastructure on AWS ') {
-            // Create an Approval Button with a timeout of 15minutes.
-            // this require a manuel validation in order to deploy on production environment
+        stage ('create infrastructure on AWS ') {            
             steps {
+                // Create an Approval Button with a timeout of 15minutes.
+                // this require a manuel validation in order to deploy on production environment
                 timeout(time: 15, unit: "MINUTES") {
                             input message: 'Do you want to provision in AWS ?', ok: 'Yes'
                         }
-            }
-            steps {
                 //config aws cli and auth with key id/secret
                 sh 'rm -Rf .aws'
                 sh 'mkdir .aws'
