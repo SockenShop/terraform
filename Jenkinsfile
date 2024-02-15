@@ -46,6 +46,7 @@ agent any
             sh 'helm repo add eks https://aws.github.io/eks-charts'
             sh 'helm repo update eks'
             sh 'helm upgrade --install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=sock-shop-project --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller'
+            sh 'kubectl apply -f shop-namespace.yaml'
             sh 'kubectl apply -f shop-ingress.yaml'
         }
     }
@@ -64,7 +65,7 @@ agent any
             sh 'aws eks --region eu-west-3 update-kubeconfig --name sock-shop-project'
             sh 'helm repo add prometheus-community https://prometheus-community.github.io/helm-charts'
             sh 'helm repo update'
-            sh 'kubectl apply -f namespace.yaml'
+            sh 'kubectl apply -f mon-namespace.yaml'
             sh 'helm upgrade --install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --set grafana.service.type=NodePort --set promotheus.service.type=NodePort'
             sh 'kubectl apply -f mon-ingress.yaml'
         }
