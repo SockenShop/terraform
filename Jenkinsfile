@@ -63,7 +63,7 @@ agent any
             sh 'helm repo add prometheus-community https://prometheus-community.github.io/helm-charts'
             sh 'helm repo update'
             sh 'kubectl apply -f mon-namespace.yaml'
-            sh 'helm upgrade --install --timeout=15m prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --set grafana.service.type=NodePort --set promotheus.service.type=NodePort'
+            sh 'helm upgrade --install --timeout=15m prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --set grafana.service.type=NodePort --set promotheus.service.type=NodePort --set prometheusOperator.tls.enabled=false'
             sh 'kubectl apply -f mon-ingress.yaml'
         }
     }
