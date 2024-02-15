@@ -1,4 +1,11 @@
 pipeline {
+    environment {
+                AWSKEY = credentials("AWS_KEY")
+                AWSSECRETKEY = credentials("AWS_SECRET_KEY")
+                AWSREGION = credentials("AWS_REGION")
+                EKSCLUSTERNAME = credentials("EKS_CLUSTER")
+                NAMESPACE = credentials("NAMESPACE")
+    } 
 agent any
     stages {
         stage ('initialise Terraform') {
@@ -8,10 +15,7 @@ agent any
             }
         }
         stage ('create infrastructure on AWS ') {         
-            environment {
-                AWSKEY = credentials("AWS_KEY")
-                AWSSECRETKEY = credentials("AWS_SECRET_KEY")
-            }   
+              
             steps {
                 // Create an Approval Button with a timeout of 15minutes.
                 // this require a manuel validation in order to deploy on production environment
@@ -23,46 +27,38 @@ agent any
                 sh 'mkdir .aws'
                 sh 'aws configure set aws_access_key_id $AWSKEY'
                 sh 'aws configure set aws_secret_access_key $AWSSECRETKEY'
-                sh 'aws configure set region eu-west-3'
+                sh 'aws configure set region $AWSREGION'
                 sh 'aws configure set output text'
                 //apply terraform files
                 sh 'terraform apply -auto-approve'
             }
         }
-    stage ('AWS elb stuff') {
-        environment {
-                AWSKEY = credentials("AWS_KEY")
-                AWSSECRETKEY = credentials("AWS_SECRET_KEY")
-            }
+    stage ('AWS elb') {
         steps {
             sh 'rm -Rf .aws'
             sh 'mkdir .aws'
             sh 'aws configure set aws_access_key_id $AWSKEY'
             sh 'aws configure set aws_secret_access_key $AWSSECRETKEY'
-            sh 'aws configure set region eu-west-3'
+            sh 'aws configure set region $AWSREGION'
             sh 'aws configure set output text'
-            sh 'aws eks --region eu-west-3 update-kubeconfig --name sock-shop-project'
+            sh 'aws eks --region $AWSREGION update-kubeconfig --name $EKSCLUSTERNAME'
             sh 'kubectl apply -f alb-sa.yaml'
             sh 'helm repo add eks https://aws.github.io/eks-charts'
             sh 'helm repo update eks'
-            sh 'helm upgrade --install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=sock-shop-project --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller'
+            sh 'helm upgrade --install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=$EKSCLUSTERNAME --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller'
             sh 'kubectl apply -f shop-namespace.yaml'
             sh 'kubectl apply -f shop-ingress.yaml'
         }
     }
     stage ('setup monitoring') {
-        environment {
-                AWSKEY = credentials("AWS_KEY")
-                AWSSECRETKEY = credentials("AWS_SECRET_KEY")
-            }
         steps {
             sh 'rm -Rf .aws'
             sh 'mkdir .aws'
             sh 'aws configure set aws_access_key_id $AWSKEY'
             sh 'aws configure set aws_secret_access_key $AWSSECRETKEY'
-            sh 'aws configure set region eu-west-3'
+            sh 'aws configure set region $AWSREGION'
             sh 'aws configure set output text'
-            sh 'aws eks --region eu-west-3 update-kubeconfig --name sock-shop-project'
+            sh 'aws eks --region $AWSREGION update-kubeconfig --name $EKSCLUSTERNAME'
             sh 'helm repo add prometheus-community https://prometheus-community.github.io/helm-charts'
             sh 'helm repo update'
             sh 'kubectl apply -f mon-namespace.yaml'
@@ -76,10 +72,6 @@ agent any
         }
     }
     stage ('destroy everything') {
-        environment {
-                AWSKEY = credentials("AWS_KEY")
-                AWSSECRETKEY = credentials("AWS_SECRET_KEY")
-            }
         steps {
                 // Create an Approval Button with a timeout of 15minutes.
                 // this require a manuel validation in order to deploy on production environment
@@ -91,7 +83,7 @@ agent any
                 sh 'mkdir .aws'
                 sh 'aws configure set aws_access_key_id $AWSKEY'
                 sh 'aws configure set aws_secret_access_key $AWSSECRETKEY'
-                sh 'aws configure set region eu-west-3'
+                sh 'aws configure set region $AWSREGION'
                 sh 'aws configure set output text'
                 //apply terraform files
                 sh 'terraform destroy -auto-approve'
