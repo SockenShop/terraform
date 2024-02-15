@@ -248,7 +248,7 @@ resource "aws_iam_policy" "lb_ctrl_policy" {
 
 resource "aws_iam_role" "lb_role_trust" {
     name = "TfEKSLbCtrlRole"
-    assume_role_policy = jsondecode({
+    assume_role_policy = jsonencode({
     "Version": "2012-10-17",
     "Statement": [
         {
@@ -276,7 +276,7 @@ resource "aws_iam_role_policy_attachment" "lb_att_policy" {
 /* //role for EFS
 resource "aws_iam_role" "efs_csi_role_trust" {
     name = "TfEKSEFSFCSIRole"
-    assume_role_policy = jsondecode({
+    assume_role_policy = jsonencode({
     "Version": "2012-10-17",
     "Statement": [
         {
