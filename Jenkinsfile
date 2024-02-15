@@ -46,6 +46,7 @@ agent any
             sh 'helm repo add eks https://aws.github.io/eks-charts'
             sh 'helm repo update eks'
             sh 'helm upgrade --install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=$EKSCLUSTERNAME --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller'
+            sh 'sed -i "s+name:.*replace.*+name: ${NAMESPACE}+g" shop-namespace.yaml'
             sh 'kubectl apply -f shop-namespace.yaml'
             sh 'kubectl apply -f shop-ingress.yaml'
         }
