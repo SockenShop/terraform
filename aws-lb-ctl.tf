@@ -1,4 +1,4 @@
-resource "kubernetes_service_account" "service-account" {
+/*resource "kubernetes_service_account" "service-account" {
  metadata {
   name      = "aws-load-balancer-controller"
   namespace = "kube-system"
@@ -52,3 +52,4 @@ resource "helm_release" "alb-controller" {
     value = var.cluster_name
   }
 }
+*/
