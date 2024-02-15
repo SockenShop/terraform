@@ -7,7 +7,11 @@ agent any
                 sh 'terraform plan'
             }
         }
-        stage ('create infrastructure on AWS ') {            
+        stage ('create infrastructure on AWS ') {         
+            environment {
+                AWSKEY = credentials("AWS_KEY")
+                AWSSECRETKEY = credentials("AWS_SECRET_KEY")
+            }   
             steps {
                 // Create an Approval Button with a timeout of 15minutes.
                 // this require a manuel validation in order to deploy on production environment
