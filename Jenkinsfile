@@ -48,7 +48,7 @@ agent any
             sh 'helm upgrade --install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=$EKSCLUSTERNAME --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller'
             sh 'sed -i "s+name:.*replace.*+name: ${NAMESPACE}+g" shop-namespace.yaml'
             sh 'kubectl apply -f shop-namespace.yaml'
-            sh 'kubectl apply -f shop-ingress.yaml'
+            sh 'kubectl apply -f shop-ingress.yaml -n $NAMESPACE'
         }
     }
     stage ('setup monitoring') {
@@ -95,7 +95,7 @@ agent any
                 // Create an Approval Button with a timeout of 15minutes.
                 // this require a manuel validation in order to deploy on production environment
                 timeout(time: 15, unit: "MINUTES") {
-                            input message: 'Do you want to the infrastructure?', ok: 'Yes'
+                            input message: 'Do you want to destroy the infrastructure?', ok: 'Yes'
                         }
                 //config aws cli and auth with key id/secret
                 sh 'rm -Rf .aws'
@@ -104,7 +104,9 @@ agent any
                 sh 'aws configure set aws_secret_access_key $AWSSECRETKEY'
                 sh 'aws configure set region $AWSREGION'
                 sh 'aws configure set output text'
-                //apply terraform files
+                sh 'kubectl delete ingress monitoring-ingress -n monitoring'
+                sh 'kubectl delete ingress sock-shop-ingress -n $NAMESPACE'
+                //destroy
                 sh 'terraform destroy -auto-approve'
             }
         }
