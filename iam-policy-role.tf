@@ -254,7 +254,7 @@ resource "aws_iam_role" "lb_role_trust" {
         {
             "Effect": "Allow",
             "Principal": {
-                "Federated": "${aws_iam_openid_connect_provider.eks_oidc.arn}"
+                "Federated": "${module.eks.oidc_provider_arn}"
             },
             "Action": "sts:AssumeRoleWithWebIdentity",
             "Condition": {
