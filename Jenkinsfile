@@ -2,7 +2,7 @@ pipeline {
 agent any
     stages{
         stage ('initialise Terraform') {
-            script {
+            steps {
                 sh 'terraform init'
                 sh 'terraform plan'
             }
@@ -13,7 +13,7 @@ agent any
             timeout(time: 15, unit: "MINUTES") {
                         input message: 'Do you want to provision in AWS ?', ok: 'Yes'
                     }
-            script {
+            steps {
                 //config aws cli and auth with key id/secret
                 sh 'rm -Rf .aws'
                 sh 'mkdir .aws'
