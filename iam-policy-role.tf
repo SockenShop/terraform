@@ -269,7 +269,7 @@ resource "aws_iam_role" "lb_role_trust" {
 }
 
 resource "aws_iam_role_policy_attachment" "lb_att_policy" {
-    role = aws_iam_role.lb_role_trust
+    role = aws_iam_role.lb_role_trust.name
     policy_arn = aws_iam_policy.lb_ctrl_policy.arn
 }
 
