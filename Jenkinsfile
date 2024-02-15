@@ -46,6 +46,7 @@ agent any
             sh 'helm repo add eks https://aws.github.io/eks-charts'
             sh 'helm repo update eks'
             sh 'helm upgrade --install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=$EKSCLUSTERNAME --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller'
+            sh 'sed -i "s+name:.*replace.*+name: ${NAMESPACE}+g" shop-namespace.yaml'
             sh 'kubectl apply -f shop-namespace.yaml'
             sh 'kubectl apply -f shop-ingress.yaml'
         }
@@ -66,9 +67,26 @@ agent any
             sh 'kubectl apply -f mon-ingress.yaml'
         }
     }
-    stage ('deploy app') {
+    stage ('deploy all services') {
+        // use sequentiel build steps
         steps {
             build job: "ms-frontend-ci-cd", wait: true
+
+            // dbs
+            build job: "ms-catalogue-db-ci-cd", wait: true
+            build job: "ms-user-db-ci-cd", wait: true
+            build job: "ms-carts-db-ci-cd", wait: true
+            build job: "ms-order-db-ci-cd", wait: true
+
+            // micro services
+            build job: "ms-catalogue-ci-cd", wait: true
+            build job: "ms-user-ci-cd", wait: true
+            build job: "ms-carts-ci-cd", wait: true
+            build job: "ms-orders-ci-cd", wait: true
+            build job: "ms-payment-ci-cd", wait: true
+            build job: "ms-queue-master-ci-cd", wait: true
+            build job: "ms-rabbitmq-ci-cd", wait: true
+            build job: "ms-shipping-ci-cd", wait: true
         }
     }
     stage ('destroy everything') {
