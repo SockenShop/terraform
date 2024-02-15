@@ -1,6 +1,6 @@
 pipeline {
 agent any
-    stages{
+    stages {
         stage ('initialise Terraform') {
             steps {
                 sh 'terraform init'
