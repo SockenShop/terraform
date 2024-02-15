@@ -66,9 +66,26 @@ agent any
             sh 'kubectl apply -f mon-ingress.yaml'
         }
     }
-    stage ('deploy app') {
+    stage ('deploy all services') {
+        // use sequentiel build steps
         steps {
             build job: "ms-frontend-ci-cd", wait: true
+
+            // dbs
+            build job: "ms-catalogue-db-ci-cd", wait: true
+            build job: "ms-user-db-ci-cd", wait: true
+            build job: "ms-carts-db-ci-cd", wait: true
+            build job: "ms-order-db-ci-cd", wait: true
+
+            // micro services
+            build job: "ms-catalogue-ci-cd", wait: true
+            build job: "ms-user-ci-cd", wait: true
+            build job: "ms-carts-ci-cd", wait: true
+            build job: "ms-orders-ci-cd", wait: true
+            build job: "ms-payment-ci-cd", wait: true
+            build job: "ms-queue-master-ci-cd", wait: true
+            build job: "ms-rabbitmq-ci-cd", wait: true
+            build job: "ms-shipping-ci-cd", wait: true
         }
     }
     stage ('destroy everything') {
