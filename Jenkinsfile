@@ -80,7 +80,7 @@ agent any
             sh 'eksctl create iamserviceaccount --cluster=$EKSCLUSTERNAME --name=velero-server --namespace=velero --role-name=eks-velero-backup --role-only --attach-policy-arn=arn:aws:iam::700778905650:policy/TfEKSVeleroPolicy --approve'
             sh 'helm repo add vmware-tanzu https://vmware-tanzu.github.io/helm-charts'
             sh 'kubectl apply -f bak-namespace.yaml'
-            sh 'helm upgrade --install velero vmware-tanzu/velero --version 5.0.2 --namespace velero -f values.yaml'
+            sh 'helm upgrade --install --timeout=15m velero vmware-tanzu/velero --version 5.0.2 --namespace velero -f values.yaml'
         }
     }
     stage ('deploy all services') {
