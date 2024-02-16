@@ -1,7 +1,7 @@
 # define EKS cluster
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "19.15.3"
+  version = "~> 20.0"
 # cluster name
   cluster_name    = var.cluster_name
   cluster_version = "1.28"
@@ -30,9 +30,9 @@ module "eks" {
       most_recent = true
     }
     # ebs csi driver to use velero backup
-    aws-ebs-csi-driver = {
+   /* aws-ebs-csi-driver = {
       most_recent = true
-    }
+    }*/
   }
  
 # define managed node group
@@ -59,7 +59,7 @@ module "eks" {
   }
 }
 # ebs csi runs into timeout
-/*
+
 # https://aws.amazon.com/blogs/containers/amazon-ebs-csi-driver-is-now-generally-available-in-amazon-eks-add-ons/ 
 data "aws_iam_policy" "ebs_csi_policy" {
   arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
@@ -86,4 +86,3 @@ resource "aws_eks_addon" "ebs-csi" {
     "terraform" = "true"
   }
 }
-*/
