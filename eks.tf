@@ -1,7 +1,7 @@
 # define EKS cluster
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 20.0"
+  version = "19.15.3"
 # cluster name
   cluster_name    = var.cluster_name
   cluster_version = "1.28"
@@ -30,7 +30,7 @@ module "eks" {
       most_recent = true
     }
     # ebs csi driver to use velero backup
-   /* aws-ebs-csi-driver = {
+    /*aws-ebs-csi-driver = {
       most_recent = true
     }*/
   }
@@ -79,7 +79,7 @@ module "irsa-ebs-csi" {
 resource "aws_eks_addon" "ebs-csi" {
   cluster_name             = module.eks.cluster_name
   addon_name               = "aws-ebs-csi-driver"
-  addon_version            = "v1.20.0-eksbuild.1"
+  addon_version            = "v1.12.1-eksbuild.1"
   service_account_role_arn = module.irsa-ebs-csi.iam_role_arn
   tags = {
     "eks_addon" = "ebs-csi"
