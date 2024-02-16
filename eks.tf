@@ -48,8 +48,8 @@ module "eks" {
       capacity_type  = "SPOT"
 
       min_size     = 1
-      max_size     = 3
-      desired_size = 2
+      max_size     = 4
+      desired_size = 3
 
       # additional role for ebs csi driver to use velero as backup solution
       iam_role_additional_policies = {
