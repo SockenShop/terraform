@@ -68,7 +68,7 @@ agent any
             sh 'kubectl apply -f mon-ingress.yaml'
         }
     }
-    stage ('setup Velero') {
+    /*stage ('setup Velero') {
         steps {
             sh 'rm -Rf .aws'
             sh 'mkdir .aws'
@@ -82,7 +82,7 @@ agent any
             sh 'kubectl apply -f bak-namespace.yaml'
             sh 'helm upgrade --install --timeout=15m velero vmware-tanzu/velero --version 5.0.2 --namespace velero -f values.yaml'
         }
-    }
+    }*/
     stage ('deploy all services') {
         // use sequentiel build steps
         steps {
