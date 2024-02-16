@@ -68,6 +68,21 @@ agent any
             sh 'kubectl apply -f mon-ingress.yaml'
         }
     }
+    stage ('setup Velero') {
+        steps {
+            sh 'rm -Rf .aws'
+            sh 'mkdir .aws'
+            sh 'aws configure set aws_access_key_id $AWSKEY'
+            sh 'aws configure set aws_secret_access_key $AWSSECRETKEY'
+            sh 'aws configure set region $AWSREGION'
+            sh 'aws configure set output text'
+            sh 'aws eks --region $AWSREGION update-kubeconfig --name $EKSCLUSTERNAME'
+            sh 'eksctl create iamserviceaccount --cluster=$EKSCLUSTERNAME --name=velero-server --namespace=velero --role-name=eks-velero-backup --role-only --attach-policy-arn=arn:aws:iam::700778905650:policy/TfEKSVeleroPolicy --approve'
+            sh 'helm repo add vmware-tanzu https://vmware-tanzu.github.io/helm-charts'
+            sh 'kubectl apply -f bak-namespace.yaml'
+            sh 'helm upgrade --install velero vmware-tanzu/velero --version 5.0.2 --namespace velero -f values.yaml'
+        }
+    }
     stage ('deploy all services') {
         // use sequentiel build steps
         steps {
