@@ -8,7 +8,7 @@ configuration:
     provider: aws
 initContainers:
 - name: velero-plugin-for-aws
-  image: velero/velero-plugin-for-aws:v1.7.1
+  image: velero/velero-plugin-for-aws:latest
   volumeMounts:
   - mountPath: /target
     name: plugins
