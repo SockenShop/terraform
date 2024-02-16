@@ -121,6 +121,7 @@ agent any
                 sh 'aws configure set output text'
                 sh 'kubectl delete ingress monitoring-ingress -n monitoring'
                 sh 'kubectl delete ingress sock-shop-ingress -n $NAMESPACE'
+                //sh 'aws iam delete-policy --policy-arn arn:aws:iam::700778905650:policy/TfEKSVeleroPolicy'
                 //destroy
                 sh 'terraform destroy -auto-approve'
             }

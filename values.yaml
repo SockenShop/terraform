@@ -17,4 +17,4 @@ credentials:
 serviceAccount:
   server:
     annotations:
-      eks.amazonaws.com/role-arn: "arn:aws:iam::700778905650:policy/TfEKSVeleroPolicy"
+      eks.amazonaws.com/role-arn: "arn:aws:iam::700778905650:role/eks-velero-backup"
