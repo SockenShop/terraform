@@ -17,7 +17,7 @@ module "eks" {
   # disable encyption so we dont need a key
   cluster_encryption_config      = {}
 
-# deprecated / obsolete
+# some are deprecated / obsolete
 
   cluster_addons = {
     coredns = {
@@ -27,6 +27,10 @@ module "eks" {
       most_recent = true
     }
     vpc-cni = {
+      most_recent = true
+    }
+    # ebs csi driver to use velero backup
+    aws-ebs-csi-driver = {
       most_recent = true
     }
   }
@@ -46,6 +50,11 @@ module "eks" {
       min_size     = 1
       max_size     = 3
       desired_size = 2
+
+      # additional role for ebs csi driver to use velero as backup solution
+      iam_role_additional_policies = {
+        AmazonEBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+      }
     }
   }
 }
