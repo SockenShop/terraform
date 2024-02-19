@@ -1,3 +1,4 @@
+// gets created by EKS module, not needed anymore
 /*data "tls_certificate" "eks_oidc" {
   url = module.eks.cluster_oidc_issuer_url
 }

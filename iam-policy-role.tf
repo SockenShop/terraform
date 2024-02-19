@@ -319,7 +319,7 @@ resource "aws_iam_policy" "velero_policy" {
 })
 }
 
-
+// // preparation to deploy EFS for persistant storage
 /* //role for EFS
 resource "aws_iam_role" "efs_csi_role_trust" {
     name = "TfEKSEFSFCSIRole"

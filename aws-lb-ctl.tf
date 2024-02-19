@@ -1,3 +1,4 @@
+// preparation to deploy AWS alb controller with terraform
 /*resource "kubernetes_service_account" "service-account" {
  metadata {
   name      = "aws-load-balancer-controller"

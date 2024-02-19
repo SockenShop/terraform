@@ -1,3 +1,4 @@
+// preparation to deploy EFS for persistant storage
 /*
 resource "aws_security_group" "allow_nfs" {
   name        = "allow nfs for efs"
