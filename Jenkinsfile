@@ -31,6 +31,7 @@ agent any
                 sh 'aws configure set output text'
                 //apply terraform files
                 sh 'terraform apply -auto-approve'
+                sh 'sleep 30'
             }
         }
     stage ('AWS elb') {
